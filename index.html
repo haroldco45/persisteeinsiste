@@ -3,134 +3,80 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vibras Positivas - Motivación</title>
+    <title>Vibras Positivas - PWA</title>
+    <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#FFD700">
     <style>
-        :root {
-            --primary: #FFD700; /* Dorado energía */
-            --dark: #1a1a1a;
-            --light: #ffffff;
-        }
-
+        :root { --primary: #FFD700; --dark: #121212; --card: #1e1e1e; --text: #f5f5f5; }
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--dark);
-            color: var(--light);
-            margin: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            text-align: center;
-            overflow: hidden;
+            font-family: 'Segoe UI', sans-serif; background-color: var(--dark);
+            color: var(--text); margin: 0; display: flex; flex-direction: column;
+            align-items: center; justify-content: center; min-height: 100vh; text-align: center;
         }
-
-        .container {
-            padding: 20px;
-            max-width: 500px;
-            animation: fadeIn 1.5s ease-in;
+        .main-card {
+            background: var(--card); padding: 40px 25px; border-radius: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5); max-width: 400px; width: 90%;
+            border: 1px solid rgba(255, 215, 0, 0.2); animation: fadeIn 0.8s ease-out;
         }
-
-        h1 {
-            font-size: 2.5rem;
-            color: var(--primary);
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            margin-bottom: 10px;
+        h1 { color: var(--primary); font-size: 1.8rem; margin: 15px 0; }
+        #quote-display {
+            font-size: 1.3rem; line-height: 1.6; margin: 30px 0; min-height: 120px;
+            display: flex; align-items: center; justify-content: center; transition: opacity 0.4s;
         }
-
-        #quote-container {
-            font-size: 1.5rem;
-            font-style: italic;
-            margin: 30px 0;
-            min-height: 80px;
-            transition: transform 0.3s;
+        .btn-vibras {
+            background: var(--primary); color: #000; border: none; padding: 18px 35px;
+            font-size: 1.1rem; font-weight: 800; border-radius: 50px; cursor: pointer;
+            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.3); transition: 0.3s;
         }
-
-        .btn-boost {
-            background-color: var(--primary);
-            border: none;
-            padding: 15px 30px;
-            font-size: 1.2rem;
-            font-weight: bold;
-            border-radius: 50px;
-            cursor: pointer;
-            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
-            transition: all 0.3s ease;
-        }
-
-        .btn-boost:active {
-            transform: scale(0.95);
-        }
-
-        footer {
-            position: fixed;
-            bottom: 20px;
-            font-size: 0.8rem;
-            opacity: 0.8;
-        }
-
-        /* Animaciones */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .pulse {
-            animation: pulse-animation 2s infinite;
-        }
-
-        @keyframes pulse-animation {
-            0% { box-shadow: 0 0 0 0px rgba(255, 215, 0, 0.7); }
-            100% { box-shadow: 0 0 0 20px rgba(255, 215, 0, 0); }
-        }
+        .btn-vibras:active { transform: scale(0.9); }
+        footer { margin-top: 40px; font-size: 0.85rem; color: #888; }
+        .highlight { color: var(--primary); }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <div id="logo-placeholder">
-            <h2 style="color: var(--primary);">⚡</h2>
-        </div>
-        <h1>¡PALANTE!</h1>
-        <div id="quote-container">
-            "No desisto, siempre persisto e insisto."
-        </div>
-        <button class="btn-boost pulse" onclick="newQuote()">¡DAME VIBRAS!</button>
+    <div class="main-card">
+        <div style="font-size: 4rem;">⚡</div>
+        <h1>¡VAMOS PALANTE!</h1>
+        <div id="quote-display">Cargando vibras...</div>
+        <button class="btn-vibras" onclick="getNewVibe()">¡DAME ENERGÍA!</button>
     </div>
 
     <footer>
-        App desarrollada por <strong>Vibras Positivas (3117700431)</strong> derechos de autor.
+        App desarrollada por <br>
+        <strong class="highlight">Vibras Positivas (3117700431)</strong> <br>
+        Derechos de autor &copy; 2026
     </footer>
 
     <script>
-        const quotes = [
-            "El éxito es la suma de pequeños esfuerzos repetidos día tras día.",
-            "Si no desistes, el universo no tiene otra opción que conspirar a tu favor.",
-            "Insiste, persiste y nunca desistas. ¡Tu meta está cerca!",
-            "Las vibras positivas atraen resultados extraordinarios.",
-            "Hoy es un gran día para ganarle a la excusa de ayer.",
-            "Tu mentalidad es tu mayor activo. ¡Mantenla en alto!",
-            "Vibras Positivas: Donde la energía se convierte en acción."
-        ];
+        let frases = [];
 
-        function newQuote() {
-            const container = document.getElementById('quote-container');
-            const randomIndex = Math.floor(Math.random() * quotes.length);
-            
-            // Efecto de cambio
-            container.style.opacity = 0;
-            setTimeout(() => {
-                container.innerText = `"${quotes[randomIndex]}"`;
-                container.style.opacity = 1;
-            }, 300);
+        async function cargarFrases() {
+            try {
+                const res = await fetch('frases.json');
+                frases = await res.json();
+                getNewVibe(); // Mostrar la primera frase al cargar
+            } catch (e) {
+                document.getElementById('quote-display').innerText = '"No desisto, siempre persisto e insisto."';
+            }
         }
 
-        // Registro de Service Worker para PWA (Simulado)
+        function getNewVibe() {
+            const display = document.getElementById('quote-display');
+            if (frases.length === 0) return;
+            display.style.opacity = '0';
+            setTimeout(() => {
+                const random = frases[Math.floor(Math.random() * frases.length)];
+                display.innerText = `"${random}"`;
+                display.style.opacity = '1';
+            }, 400);
+        }
+
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                console.log('PWA Lista para funcionar offline');
+                navigator.serviceWorker.register('sw.js');
+                cargarFrases();
             });
         }
     </script>
